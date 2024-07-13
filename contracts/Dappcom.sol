@@ -52,7 +52,7 @@ contract Dappcom {
     function buy(uint256 _id) public payable {
         Item memory item = items[_id];
         require(msg.value >= item.cost, "Send mo' eth");
-        require(item.stock > 0, "Item is out of stock")
+        require(item.stock > 0, "Item is out of stock");
 
         Order memory order = Order(block.timestamp, item);
         orderCount[msg.sender] += 1;
