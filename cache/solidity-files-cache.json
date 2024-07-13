@@ -1,0 +1,41 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "D:\\projects\\web3\\Dappcom\\contracts\\Dappcom.sol": {
+      "lastModificationDate": 1720858129885,
+      "contentHash": "4ef16d997878da12d12666475be69c7f",
+      "sourceName": "contracts/Dappcom.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.18"
+      ],
+      "artifacts": [
+        "Dappcom"
+      ]
+    }
+  }
+}
