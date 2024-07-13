@@ -16,9 +16,17 @@ contract Dappcom {
         uint256 stock;
     }
 
+    struct Order {
+        uint256 timestamp;
+        Item item;
+    }
+
     event List(string name, uint256 cost, uint256 stock);
+    event Buy(address buyer, uint256 orderId, uint256 itemId);
 
     mapping (uint256 => Item) public items;
+    mapping (address => uint256) public orderCount;
+    mapping (address => mapping(uint256 => Order)) public orders;
 
     modifier onlyOwner(){
         require(msg.sender == owner);
@@ -39,5 +47,23 @@ contract Dappcom {
         items[_id] = item;
 
         emit List(_name, _cost, _stock);
+    }
+
+    function buy(uint256 _id) public payable {
+        Item memory item = items[_id];
+        require(msg.value >= item.cost, "Send mo' eth");
+        require(item.stock > 0, "Item is out of stock")
+
+        Order memory order = Order(block.timestamp, item);
+        orderCount[msg.sender] += 1;
+        orders[msg.sender][orderCount[msg.sender]] = order; 
+        // orders[add] => { 1 : order, 2: order }
+        // orders[add2] => { 1: order}
+
+        items[_id].stock = items[_id].stock - 1;
+
+        emit Buy(msg.sender, orderCount[msg.sender], _id);
+
+
     }
 }

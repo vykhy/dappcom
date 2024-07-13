@@ -58,4 +58,39 @@ describe("Dappcom", () => {
       expect(transaction).to.emit(dappcom, "List");
     });
   });
+
+  describe("Buying", () => {
+    let transaction;
+
+    beforeEach(async () => {
+      transaction = await dappcom
+        .connect(deployer)
+        .list(ID, NAME, CATEGORY, IMAGE, COST, RATING, STOCK);
+      await transaction.wait();
+
+      transaction = await dappcom.connect(buyer).buy(ID, { value: COST });
+    });
+
+    it("Updates contract balance", async () => {
+      expect(await ethers.provider.getBalance(dappcom.target)).to.be.equal(
+        COST
+      );
+    });
+
+    it("Updates address order count", async () => {
+      const orderCount = await dappcom.orderCount(buyer.address);
+      expect(orderCount).to.equal(1);
+    });
+
+    it("Adds the order", async () => {
+      const order = await dappcom.orders(buyer.address, 1);
+
+      expect(order.timestamp).to.be.greaterThan(0);
+      expect(order.item.name).to.be.equal(NAME);
+    });
+
+    it("Emits Buy event", async () => {
+      expect(transaction).to.emit(dappcom, "Buy");
+    });
+  });
 });
