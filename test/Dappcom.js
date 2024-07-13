@@ -12,7 +12,7 @@ const NAME = "Shoes";
 const CATEGORY = "Clothing";
 const IMAGE =
   "https://ipfs.io/ipfs/QmTYEboq8raiBs7GTUg2yLXB3PMz6HuBNgNfSZBx5Msztg/shoes.jpg";
-const COST = tokens(1);
+const COST = tokens(100);
 const RATING = 4;
 const STOCK = 5;
 
@@ -91,6 +91,41 @@ describe("Dappcom", () => {
 
     it("Emits Buy event", async () => {
       expect(transaction).to.emit(dappcom, "Buy");
+    });
+  });
+
+  describe("Withdraw", async () => {
+    let balance, ownerBalance, transaction;
+
+    beforeEach(async () => {
+      balance = await ethers.provider.getBalance(dappcom.target);
+      ownerBalance = await ethers.provider.getBalance(deployer.address);
+    });
+
+    it("It only allows owner", async () => {
+      await expect(
+        dappcom.connect(buyer).withdraw()
+      ).to.be.revertedWithCustomError(dappcom, "OnlyOwnerAllowed");
+    });
+
+    it("Updates contract and owner balance", async () => {
+      const tx = await dappcom.connect(deployer).withdraw();
+      const receipt = await tx.wait();
+
+      const newBalance = await ethers.provider.getBalance(dappcom.target);
+      expect(newBalance).to.be.equal(0);
+
+      const newOwnerBalance = await ethers.provider.getBalance(
+        deployer.address
+      );
+
+      // Calculate the gas cost
+      const gasUsed = receipt.gasUsed;
+      const gasPrice = tx.gasPrice;
+      const gasCost = gasUsed * gasPrice;
+
+      // Check that the owner's balance has increased by the contract balance minus gas costs
+      expect(newOwnerBalance).to.be.equal(ownerBalance + balance - gasCost);
     });
   });
 });

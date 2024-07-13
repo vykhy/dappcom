@@ -2,6 +2,8 @@
 
 pragma solidity ^0.8.18;
 
+error OnlyOwnerAllowed();
+
 contract Dappcom {
     string public name = "Dappcom";
     address public immutable owner;
@@ -29,7 +31,7 @@ contract Dappcom {
     mapping (address => mapping(uint256 => Order)) public orders;
 
     modifier onlyOwner(){
-        require(msg.sender == owner);
+        if(msg.sender != owner) revert OnlyOwnerAllowed();
         _;
     }
 
@@ -64,6 +66,10 @@ contract Dappcom {
 
         emit Buy(msg.sender, orderCount[msg.sender], _id);
 
+    }
 
+    function withdraw() public onlyOwner(){
+        (bool success, ) = owner.call{ value: address(this).balance }("");
+        require(success);
     }
 }

@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "D:\\projects\\web3\\Dappcom\\contracts\\Dappcom.sol": {
-      "lastModificationDate": 1720859725047,
-      "contentHash": "05f34961a761dffc6a6fbfa58ed0c4d8",
+      "lastModificationDate": 1720861041020,
+      "contentHash": "de6fe5b981e607ba5cce336527a2be0c",
       "sourceName": "contracts/Dappcom.sol",
       "solcConfig": {
         "version": "0.8.24",
